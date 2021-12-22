@@ -33,6 +33,26 @@ const moviesController = {
 
 
     },
+    consultaOmdb : async (req,res) => {
+        try {
+            let apiKey = '4cc5bdfa';
+            const {search} = req.body;
+
+            let moviesOmdb = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&t=${search}`)
+
+            let response = {
+                status: 200,
+                meta: {
+                    total: movies.length,
+                    url: '/api/movies'
+                },
+                data: moviesOmdb
+            }
+            return res.status(200).json(response)
+        } catch(err) {
+            return res.status(error.status || 500).json(error)
+        }
+    },
     detail: async (req, res) => {
         try {
             let movie = await db.Movie.findByPk(req.params.id,
